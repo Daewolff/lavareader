@@ -4,8 +4,14 @@ import os
 import re
 
 app = Flask(__name__)
-UPLOAD_FOLDER = os.path.join('static', 'uploads')
+
+# On utilise /tmp car c'est un dossier toujours accessible en écriture sur Docker
+UPLOAD_FOLDER = '/tmp/uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+# On s'assure que le dossier existe dès le lancement de l'app
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
 
 def nettoyer_texte(texte):
     if not texte:
