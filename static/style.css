@@ -1,0 +1,207 @@
+/* ===== VARIABLES & THEME LAVA ===== */
+:root {
+    --lave: #FF4500;
+    --lave-claire: #FF8C00;
+    --lave-glow: #CC3300;
+    --noir-volcan: #0A0A0A;
+    --noir-roche: #151515;
+    --noir-bord: #252525;
+    --texte: #F2F2F2;
+    --texte-cendres: #808080;
+}
+
+/* ===== RESET & STRUCTURE DE BASE ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--noir-volcan);
+    color: var(--texte);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    height: 100vh; 
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; 
+}
+
+/* ===== EN-TETE ===== */
+header {
+    flex-shrink: 0; 
+    background: var(--noir-roche);
+    border-bottom: 3px solid var(--lave);
+    padding: 15px 20px;
+    text-align: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.nom {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: var(--lave-claire);
+    text-shadow: 0 0 10px var(--lave);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+header p {
+    font-size: 0.9em;
+    color: var(--texte-cendres);
+    margin-top: 5px;
+}
+
+/* ===== ZONE DE TRAVAIL ===== */
+main {
+    flex: 1; 
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+    min-height: 0; 
+}
+
+.zone-saisie {
+    flex-shrink: 0;
+    background: var(--noir-roche);
+    border: 1px solid var(--noir-bord);
+    border-radius: 8px;
+    padding: 15px;
+    text-align: center;
+}
+
+.btn-envoyer {
+    padding: 10px 25px;
+    background: linear-gradient(to right, #8B0000, var(--lave));
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: 0.3s ease;
+}
+
+.btn-envoyer:hover {
+    box-shadow: 0 0 15px var(--lave);
+    filter: brightness(1.2);
+}
+
+/* ===== PANNEAU DU LECTEUR PDF ===== */
+.panneau-unique {
+    flex: 1; 
+    background: var(--noir-roche);
+    border-radius: 12px;
+    border: 1px solid var(--noir-bord);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.barre-lecture {
+    flex-shrink: 0;
+    background: #000;
+    padding: 12px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid var(--lave);
+}
+
+.controles {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.navigation-directe {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--noir-bord);
+    padding: 6px 15px;
+    border-radius: 20px;
+}
+
+.navigation-directe input {
+    width: 55px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--lave);
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    outline: none;
+}
+
+.navigation-directe span {
+    color: var(--texte-cendres);
+    font-size: 0.9em;
+}
+
+.btn-aller {
+    background: var(--lave);
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-nav {
+    background: var(--noir-bord);
+    color: white;
+    border: 1px solid var(--lave);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-audio {
+    background: transparent;
+    color: white;
+    border: 1px solid var(--lave);
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    min-width: 140px;
+}
+
+.btn-audio:hover, .btn-nav:hover, .btn-aller:hover {
+    background: var(--lave-glow);
+    border-color: var(--lave-claire);
+}
+
+.volume-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--lave);
+}
+
+input[type="range"] {
+    accent-color: var(--lave);
+    cursor: pointer;
+    width: 100px;
+}
+
+#lecteur-pdf {
+    flex: 1; 
+    border: none;
+    background: #525659;
+}
+
+/* ===== FOOTER ===== */
+footer {
+    flex-shrink: 0;
+    text-align: center;
+    padding: 10px;
+    color: var(--texte-cendres);
+    font-size: 0.8em;
+    background: var(--noir-roche);
+    border-top: 1px solid var(--noir-bord);
+}

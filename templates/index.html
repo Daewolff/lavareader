@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LavaReader</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="nom">🌋 LAVA<span style="color:#FF4500">READER</span></div>
+        <p>Lecture en fusion - Votre document au cœur du magma</p>
+    </header>
+
+    <main>
+        <div class="zone-saisie">
+            <input type="file" id="pdfFile" accept=".pdf" style="display:none" onchange="lancerForge()">
+            <button class="btn-envoyer" onclick="document.getElementById('pdfFile').click()">
+                FORGER LA LECTURE
+            </button>
+        </div>
+
+        <div class="panneau-unique">
+            <div class="barre-lecture">
+                <div class="controles">
+                    <button class="btn-nav" onclick="pagePrecedente()">⏮️</button>
+                    <button class="btn-audio" id="btn-play" onclick="toggleLecture()">▶️ JOUER</button>
+                    <button class="btn-nav" onclick="pageSuivante()">⏭️</button>
+                </div>
+                
+                <div class="navigation-directe">
+                    <input type="number" id="input-page" min="1" value="1">
+                    <span id="total-pages">/ --</span>
+                    <button class="btn-aller" onclick="sauterAPage()">ALLER</button>
+                </div>
+
+                <div class="volume-box">
+                    🔈 <input type="range" id="vol" min="0" max="1" step="0.1" value="1"> 🔊
+                </div>
+            </div>
+            <iframe id="lecteur-pdf" src=""></iframe>
+        </div>
+    </main>
+
+    <footer>
+        <p>🌋 LavaReader - L'intelligence au service de la lecture - 2026</p>
+    </footer>
+
+    <script>
+        let synthese = window.speechSynthesis;
+        let listePages = [];
+        let indexPageCourante = 0;
+        let enPause = false;
+
+        async function lancerForge() {
+            const file = document.getElementById('pdfFile').files[0];
+            const fd = new FormData();
+            fd.append('file', file);
+            
+            try {
+                const res = await fetch('/upload', { method: 'POST', body: fd });
+                const data = await res.json();
+                if (data.error) { alert("Erreur : " + data.error); return; }
+
+                listePages = data.pages;
+                indexPageCourante = 0;
+                document.getElementById('total-pages').innerText = "/ " + listePages.length;
+                document.getElementById('input-page').max = listePages.length;
+                document.getElementById('lecteur-pdf').src = data.pdf_url + "#page=1";
+                document.getElementById('input-page').value = 1;
+            } catch (e) { alert("Erreur de connexion au serveur"); }
+        }
+
+        function toggleLecture() {
+            if (synthese.speaking && !enPause) {
+                synthese.pause(); enPause = true;
+                document.getElementById('btn-play').innerText = "▶️ REPRENDRE";
+            } else if (enPause) {
+                synthese.resume(); enPause = false;
+                document.getElementById('btn-play').innerText = "⏸️ PAUSE";
+            } else if (listePages.length > 0) {
+                lirePage(indexPageCourante);
+            }
+        }
+
+        function lirePage(index) {
+            if (index < 0 || index >= listePages.length) return;
+            synthese.cancel();
+            indexPageCourante = index;
+            
+            // Mise à jour de l'iframe
+            const frame = document.getElementById('lecteur-pdf');
+            const urlBase = frame.src.split('#')[0];
+            frame.src = urlBase + "#page=" + (index + 1);
+            document.getElementById('input-page').value = index + 1;
+
+            let msg = new SpeechSynthesisUtterance(listePages[index].texte);
+            msg.lang = 'fr-FR';
+            msg.volume = document.getElementById('vol').value;
+            msg.onstart = () => { document.getElementById('btn-play').innerText = "⏸️ PAUSE"; enPause = false; };
+            msg.onend = () => { if (!enPause && indexPageCourante < listePages.length - 1) lirePage(indexPageCourante + 1); };
+            synthese.speak(msg);
+        }
+
+        function sauterAPage() {
+            const num = parseInt(document.getElementById('input-page').value) - 1;
+            if (num >= 0 && num < listePages.length) lirePage(num);
+        }
+
+        function pageSuivante() { lirePage(indexPageCourante + 1); }
+        function pagePrecedente() { lirePage(indexPageCourante - 1); }
+    </script>
+</body>
+</html>
