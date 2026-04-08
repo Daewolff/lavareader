@@ -58,4 +58,6 @@ def upload_pdf():
             return jsonify({"error": str(e)})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    # Host 0.0.0.0 est obligatoire pour Docker/Hugging Face
+    # Port 7860 est le port par défaut des Spaces
+    app.run(host="0.0.0.0", port=7860)
